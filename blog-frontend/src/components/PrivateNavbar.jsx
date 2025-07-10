@@ -1,10 +1,23 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PrivateNavbar = () => {
+
+  const navigate = useNavigate();
+
   const navLinkClass =
     "relative font-serif text-base text-gray-700 px-2 py-1 transition-colors duration-300 hover:text-black";
 
   const activeClass = "after:w-full after:opacity-100 text-black";
+
+  const handleLogout = () => {
+    window.localStorage.removeItem("sessionData");
+    toast.success("Logout Successfull", {
+      position: "top-right",
+      autoClose: 3000
+    })
+    navigate("/login");
+  }
 
   return (
     <nav className="w-full flex justify-between items-center py-4 px-6 bg-transparent">
@@ -39,6 +52,7 @@ const PrivateNavbar = () => {
         <NavLink
           to="/login"
           className={`${navLinkClass} hover:text-red-700`}
+          onClick={handleLogout}
         >
           Logout
         </NavLink>

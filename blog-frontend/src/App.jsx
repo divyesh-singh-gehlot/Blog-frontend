@@ -1,3 +1,6 @@
+import "react-toastify/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
+
 import { Route, Routes } from "react-router-dom"
 import PrivateLayout from "./components/layout/PrivateLayout"
 import Home from "./pages/Home"
@@ -11,6 +14,7 @@ import Signup from "./pages/Signup"
 
 function App() {
   return (
+    <>
     <Routes>
 
       {/* Private Routes */}
@@ -28,6 +32,9 @@ function App() {
         <Route path="signup" element={<Signup />} />
       </Route>
     </Routes>
+
+    <ToastContainer />
+    </>
   )
 }
 
