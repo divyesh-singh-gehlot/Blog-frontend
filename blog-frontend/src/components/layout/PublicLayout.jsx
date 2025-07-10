@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom"
 import PublicNavbar from "../PublicNavbar"
 
-const PrivateLayout = () => {
+const PublicLayout = () => {
     const auth = true;
     if (auth) {
         <Navigate to="/" />
@@ -14,4 +14,4 @@ const PrivateLayout = () => {
     )
 }
 
-export default PrivateLayout
+export default PublicLayout

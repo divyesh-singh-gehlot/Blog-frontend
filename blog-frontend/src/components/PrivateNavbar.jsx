@@ -1,16 +1,50 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
 
 const PrivateNavbar = () => {
-  return (
-    <nav>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/posts">Posts</NavLink>
-        <NavLink to="/categories">Categories</NavLink>
-        <NavLink to="/setting">Setting</NavLink>
-        <NavLink to="/profile">Profile</NavLink>
-        <NavLink to="/login">Logout</NavLink>
-    </nav>
-  )
-}
+  const navLinkClass =
+    "relative font-serif text-base text-gray-700 px-2 py-1 transition-colors duration-300 hover:text-black";
 
-export default PrivateNavbar
+  const activeClass = "after:w-full after:opacity-100 text-black";
+
+  return (
+    <nav className="w-full flex justify-between items-center py-4 px-6 bg-transparent">
+      <NavLink
+        to="/"
+        className="text-xl font-bold font-serif tracking-wide text-black"
+      >
+        Notionary
+      </NavLink>
+
+      <div className="flex space-x-4">
+        {[
+          { to: "/", label: "Home" },
+          { to: "/posts", label: "Posts" },
+          { to: "/category", label: "Categories" },
+          { to: "/setting", label: "Setting" },
+          { to: "/profile", label: "Profile" },
+        ].map(({ to, label }) => (
+          <NavLink
+            key={to}
+            to={to}
+            className={({ isActive }) =>
+              `${navLinkClass} ${isActive ? activeClass : ""} 
+              after:content-[''] after:absolute after:-bottom-0.5 after:left-0 
+              after:h-[2px] after:w-0 after:bg-black after:transition-all after:duration-300 
+              hover:after:w-full`
+            }
+          >
+            {label}
+          </NavLink>
+        ))}
+        <NavLink
+          to="/login"
+          className={`${navLinkClass} hover:text-red-700`}
+        >
+          Logout
+        </NavLink>
+      </div>
+    </nav>
+  );
+};
+
+export default PrivateNavbar;

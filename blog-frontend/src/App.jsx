@@ -1,10 +1,13 @@
 import { Route, Routes } from "react-router-dom"
-import PrivateLayout from "./components/layout/PublicLayout"
+import PrivateLayout from "./components/layout/PrivateLayout"
 import Home from "./pages/Home"
 import PostList from "./pages/post/PostList"
 import CategoryList from "./pages/category/CategoryList"
 import Profile from "./pages/Profile"
 import Setting from "./pages/Setting"
+import PublicLayout from "./components/layout/PublicLayout"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
 
 function App() {
   return (
