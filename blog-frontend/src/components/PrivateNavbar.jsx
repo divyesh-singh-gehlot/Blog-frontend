@@ -27,7 +27,7 @@ const PrivateNavbar = () => {
   const navItems = [
     { to: "/", label: "Home" },
     { to: "/posts", label: "Posts" },
-    { to: "/category", label: "Categories" },
+    { to: "/categories", label: "Categories" },
     { to: "/setting", label: "Setting" },
     { to: "/profile", label: "Profile" },
   ];
