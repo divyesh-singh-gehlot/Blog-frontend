@@ -3,6 +3,8 @@ import axios from "../../utils/axiosInstance";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { AnimatePresence, motion } from "framer-motion";
+
 
 const CategoryList = () => {
   const navigate = useNavigate();
@@ -62,16 +64,16 @@ const CategoryList = () => {
   }, [totalPage]);
 
   const handlePrev = () => {
-  setCurrentPage((prev) => prev - 1);
-}
+    setCurrentPage((prev) => prev - 1);
+  }
 
-const handlePage = (pageNumber) => {
-  setCurrentPage(pageNumber);
-}
+  const handlePage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  }
 
-const handleNext = () => {
-  setCurrentPage((prev) => prev + 1);
-}
+  const handleNext = () => {
+    setCurrentPage((prev) => prev + 1);
+  }
 
   console.log(pageCount);
 
@@ -89,7 +91,15 @@ const handleNext = () => {
           />
         </div>
 
-        <div className="overflow-x-auto rounded-xl">
+       <AnimatePresence mode="wait">
+  <motion.table
+    key={currentPage}
+    className="w-full text-sm text-left text-gray-700"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.3 }}
+  >
           {loading ? (<div className="flex items-center justify-center gap-2">
             <p>Loading...</p>
           </div>) : (<table className="w-full text-sm text-left text-gray-700">
@@ -120,41 +130,44 @@ const handleNext = () => {
               ))}
             </tbody>
           </table>)}
+  </motion.table>
+</AnimatePresence>
 
-          {pageCount.length > 0 && (
-            <div className="flex justify-center mt-6 space-x-2">
+
+
+        {pageCount.length > 0 && (
+          <div className="flex justify-center mt-6 space-x-2">
+            <button
+              className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
+              onClick={handlePrev}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+
+            {pageCount.map((pageNumber, index) => (
               <button
-                className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
-                onClick={handlePrev}
-                disabled={currentPage === 1}
+                key={index}
+                className={`px-4 py-2 rounded-lg text-sm backdrop-blur-md shadow transition-all duration-300 hover:cursor-pointer
+      ${currentPage === pageNumber
+                    ? "bg-black text-white"
+                    : "bg-white/60 text-gray-800 hover:bg-white/80"}
+    `}
+                onClick={() => handlePage(pageNumber)}
               >
-                Prev
+                {pageNumber}
               </button>
+            ))}
 
-              {pageCount.map((pageNumber, index) => (
-                <button
-                  key={index}
-                  className="px-4 py-2 bg-white/60 text-gray-800 rounded-lg text-sm hover:bg-white/80 backdrop-blur-md shadow transition hover:cursor-pointer"
-                  onClick={() => handlePage(pageNumber)}
-                  style={{
-                    background: currentPage === pageNumber ? "black" : "",
-                    color: currentPage === pageNumber ? "white" : "",
-                  }}
-                >
-                  {pageNumber}
-                </button>
-              ))}
-
-              <button
-                className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
-                onClick={handleNext}
-                disabled={currentPage === totalPage}
-              >
-                Next
-              </button>
-            </div>
-          )}
-        </div>
+            <button
+              className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
+              onClick={handleNext}
+              disabled={currentPage === totalPage}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
