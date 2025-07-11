@@ -1,26 +1,39 @@
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Menu, X } from "lucide-react";
 
 const PrivateNavbar = () => {
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const navLinkClass =
-    "relative font-serif text-base text-gray-700 px-2 py-1 transition-colors duration-300 hover:text-black";
-
-  const activeClass = "after:w-full after:opacity-100 text-black";
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const handleLogout = () => {
     window.localStorage.removeItem("sessionData");
-    toast.success("Logout Successfull", {
+    toast.success("Logout Successful", {
       position: "top-right",
-      autoClose: 3000
-    })
+      autoClose: 3000,
+    });
     navigate("/login");
-  }
+  };
+
+  const navLinkClass =
+    "relative font-serif text-base text-gray-700 px-2 py-1 transition-colors duration-300 hover:text-black";
+  const activeClass = "after:w-full after:opacity-100 text-black";
+
+  const navItems = [
+    { to: "/", label: "Home" },
+    { to: "/posts", label: "Posts" },
+    { to: "/category", label: "Categories" },
+    { to: "/setting", label: "Setting" },
+    { to: "/profile", label: "Profile" },
+  ];
 
   return (
-    <nav className="w-full flex justify-between items-center py-4 px-6 bg-transparent">
+    <nav className="w-full bg-transparent shadow-md px-6 py-4 flex justify-between items-center">
       <NavLink
         to="/"
         className="text-xl font-bold font-serif tracking-wide text-black"
@@ -28,14 +41,9 @@ const PrivateNavbar = () => {
         Notionary
       </NavLink>
 
-      <div className="flex space-x-4">
-        {[
-          { to: "/", label: "Home" },
-          { to: "/posts", label: "Posts" },
-          { to: "/category", label: "Categories" },
-          { to: "/setting", label: "Setting" },
-          { to: "/profile", label: "Profile" },
-        ].map(({ to, label }) => (
+      {/* Desktop Nav */}
+      <div className="hidden md:flex space-x-4 items-center">
+        {navItems.map(({ to, label }) => (
           <NavLink
             key={to}
             to={to}
@@ -49,14 +57,67 @@ const PrivateNavbar = () => {
             {label}
           </NavLink>
         ))}
-        <NavLink
-          to="/login"
-          className={`${navLinkClass} hover:text-red-700`}
+        <button
           onClick={handleLogout}
+          className={`${navLinkClass} hover:text-red-700`}
         >
           Logout
-        </NavLink>
+        </button>
       </div>
+
+      {/* Mobile Hamburger */}
+      <button
+        className="md:hidden text-black focus:outline-none"
+        onClick={toggleMenu}
+      >
+        {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+      </button>
+
+      {/* Mobile Drawer from Right */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        } md:hidden`}
+      >
+        <div className="flex items-center justify-between p-4 border-b">
+          <span className="text-lg font-semibold">Notionary</span>
+          <button onClick={toggleMenu}>
+            <X size={24} />
+          </button>
+        </div>
+
+        <div className="flex flex-col p-4 space-y-4">
+          {navItems.map(({ to, label }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className={({ isActive }) =>
+                `text-lg font-serif ${isActive ? "text-black font-semibold" : "text-gray-700"}`
+              }
+              onClick={toggleMenu}
+            >
+              {label}
+            </NavLink>
+          ))}
+          <button
+            onClick={() => {
+              handleLogout();
+              toggleMenu();
+            }}
+            className="text-lg text-red-700 font-serif"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Overlay */}
+      {isMenuOpen && (
+        <div
+          className="fixed inset-0 backdrop-blur-sm bg-white/10 z-40 md:hidden"
+          onClick={toggleMenu}
+        ></div>
+      )}
     </nav>
   );
 };
