@@ -8,6 +8,9 @@ const CategoryList = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageCount, setPageCount] = useState([]);
 
 
   useEffect(() => {
@@ -17,11 +20,13 @@ const CategoryList = () => {
 
         setLoading(true);
 
-        const response = await axios.get("/categories");
+        const response = await axios.get(`/categories?page=${currentPage}`);
         const data = response.data.data
         setCategories(data.categories);
+        setTotalPage(data.pages);
 
-        console.log(data);
+
+        console.log(response);
 
         setLoading(false);
 
@@ -40,8 +45,35 @@ const CategoryList = () => {
     }
 
     getCategories();
-  }, [])
+  }, [currentPage])
 
+  useEffect(() => {
+    if (totalPage > 1) {
+      let tempPageCount = [];
+
+      for (let i = 1; i <= totalPage; i++) {
+        tempPageCount = [...tempPageCount, i];
+      }
+
+      setPageCount(tempPageCount);
+    } else {
+      setPageCount([]);
+    }
+  }, [totalPage]);
+
+  const handlePrev = () => {
+  setCurrentPage((prev) => prev - 1);
+}
+
+const handlePage = (pageNumber) => {
+  setCurrentPage(pageNumber);
+}
+
+const handleNext = () => {
+  setCurrentPage((prev) => prev + 1);
+}
+
+  console.log(pageCount);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ece9e6] to-[#ffffff] flex items-start justify-center p-4">
@@ -89,6 +121,39 @@ const CategoryList = () => {
             </tbody>
           </table>)}
 
+          {pageCount.length > 0 && (
+            <div className="flex justify-center mt-6 space-x-2">
+              <button
+                className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
+                onClick={handlePrev}
+                disabled={currentPage === 1}
+              >
+                Prev
+              </button>
+
+              {pageCount.map((pageNumber, index) => (
+                <button
+                  key={index}
+                  className="px-4 py-2 bg-white/60 text-gray-800 rounded-lg text-sm hover:bg-white/80 backdrop-blur-md shadow transition hover:cursor-pointer"
+                  onClick={() => handlePage(pageNumber)}
+                  style={{
+                    background: currentPage === pageNumber ? "black" : "",
+                    color: currentPage === pageNumber ? "white" : "",
+                  }}
+                >
+                  {pageNumber}
+                </button>
+              ))}
+
+              <button
+                className="px-4 py-2 hover:cursor-pointer bg-black text-white rounded-lg text-sm hover:bg-gray-800 transition shadow disabled:bg-gray-500 disabled:cursor-default"
+                onClick={handleNext}
+                disabled={currentPage === totalPage}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
