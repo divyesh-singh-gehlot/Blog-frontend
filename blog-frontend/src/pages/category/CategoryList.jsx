@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button, Modal } from "react-bootstrap";
+import DeleteModal from "../../components/modal/DeleteModal";
+
 
 
 const CategoryList = () => {
@@ -15,6 +16,9 @@ const CategoryList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+
 
 
   useEffect(() => {
@@ -94,6 +98,33 @@ const CategoryList = () => {
     }
   }
 
+  const handleDeleteClick = (id) => {
+    setCategoryToDelete(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setCategoryToDelete(null);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`/categories/${categoryToDelete}`);
+      toast.success("Category deleted successfully!");
+      closeDeleteModal();
+
+      // Refetch the list
+      const response = await axios.get(`/categories?q=${searchValue}&page=${currentPage}`);
+      const data = response.data.data;
+      setCategories(data.categories);
+      setTotalPage(data.pages);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete category.");
+    }
+  };
+
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ece9e6] to-[#ffffff] flex items-start justify-center p-4">
       <div className="w-full max-w-6xl backdrop-blur-md bg-white/20 border border-white/30 rounded-2xl shadow-lg p-6">
@@ -158,7 +189,7 @@ const CategoryList = () => {
                         >
                           Update
                         </button>
-                        <button className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition hover:cursor-pointer">
+                        <button className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition hover:cursor-pointer" onClick={() => handleDeleteClick(category._id)}>
                           Delete
                         </button>
                       </td>
@@ -207,6 +238,13 @@ const CategoryList = () => {
           </div>
         )}
       </div>
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDelete}
+        title="Delete Category?"
+        message="Are you sure you want to delete this category? This action cannot be undone."
+      />
     </div>
   );
 };

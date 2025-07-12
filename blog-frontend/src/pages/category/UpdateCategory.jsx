@@ -148,7 +148,7 @@ const UpdateCategory = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="w-full mt-2 text-center text-sm text-gray-600 underline hover:text-black transition"
+            className="w-full mt-2 text-center text-sm text-gray-600 underline hover:text-black transition hover:cursor-pointer"
           >
             Go Back
           </button>
