@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button, Modal } from "react-bootstrap";
 
 
 const CategoryList = () => {
@@ -13,6 +14,7 @@ const CategoryList = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageCount, setPageCount] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
 
   useEffect(() => {
@@ -22,13 +24,10 @@ const CategoryList = () => {
 
         setLoading(true);
 
-        const response = await axios.get(`/categories?page=${currentPage}`);
+        const response = await axios.get(`/categories?q=${searchValue}&page=${currentPage}`);
         const data = response.data.data
         setCategories(data.categories);
         setTotalPage(data.pages);
-
-
-        console.log(response);
 
         setLoading(false);
 
@@ -36,9 +35,6 @@ const CategoryList = () => {
         setLoading(false);
         const response = error.response;
         const data = response.data;
-
-        console.log(data);
-
         toast.error(data.message, {
           position: "top-right",
           autoClose: true
@@ -61,7 +57,7 @@ const CategoryList = () => {
     } else {
       setPageCount([]);
     }
-  }, [totalPage]);
+  }, [totalPage, searchValue]);
 
   const handlePrev = () => {
     setCurrentPage((prev) => prev - 1);
@@ -75,7 +71,28 @@ const CategoryList = () => {
     setCurrentPage((prev) => prev + 1);
   }
 
-  console.log(pageCount);
+  const handleSearch = async (e) => {
+    try {
+      const input = e.target.value;
+      setSearchValue(input);
+      setCurrentPage(1);
+
+      const response = await axios.get(`/categories?q=${input}&page=${currentPage}`);
+      const data = response.data.data;
+
+      setCategories(data.categories);
+      setTotalPage(data.pages);
+
+    } catch (error) {
+      const response = error.response;
+      const data = response.data;
+
+      toast.error(data.message, {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: true,
+      });
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#ece9e6] to-[#ffffff] flex items-start justify-center p-4">
@@ -83,55 +100,76 @@ const CategoryList = () => {
         <h1 className="text-3xl font-serif font-bold text-center mb-6 text-gray-800">📂 Category List</h1>
 
         <div className="flex justify-between items-center mb-4">
-          <button className="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition" onClick={() => navigate("new-category")}>+ Add New Category</button>
+          <button className="px-4 py-2 bg-black text-white rounded-xl text-sm hover:bg-gray-800 transition hover:cursor-pointer" onClick={() => navigate("new-category")}>+ Add New Category</button>
           <input
             type="text"
             placeholder="Search here..."
+            value={searchValue}
+            name="search"
+            onChange={handleSearch}
             className="border border-gray-300 px-3 py-2 rounded-lg bg-white/60 text-sm focus:outline-none focus:ring-2 focus:ring-black"
           />
         </div>
 
-       <AnimatePresence mode="wait">
-  <motion.table
-    key={currentPage}
-    className="w-full text-sm text-left text-gray-700"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.3 }}
-  >
-          {loading ? (<div className="flex items-center justify-center gap-2">
-            <p>Loading...</p>
-          </div>) : (<table className="w-full text-sm text-left text-gray-700">
-            <thead className="bg-white/30 border-b border-gray-300 backdrop-blur-md">
-              <tr>
-                <th className="px-6 py-3 font-semibold">Title</th>
-                <th className="px-6 py-3 font-semibold">Description</th>
-                <th className="px-6 py-3 font-semibold">Created At</th>
-                <th className="px-6 py-3 font-semibold">Updated At</th>
-                <th className="px-6 py-3 font-semibold text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white/40 backdrop-blur-sm">
-              {categories.map((category) => (
-                <tr
-                  key={category._id}
-                  className="even:bg-white/60 hover:bg-white/80 transition-all"
-                >
-                  <td className="px-6 py-4">{category.title}</td>
-                  <td className="px-6 py-4">{category.description}</td>
-                  <td className="px-6 py-4">{moment(category.createdAt).tz("Asia/Kolkata").format("DD/MMM/YYYY, HH:mm:ss")}</td>
-                  <td className="px-6 py-4">{moment(category.updatedAt).tz("Asia/Kolkata").format("DD/MMM/YYYY, HH:mm:ss")}</td>
-                  <td className="px-6 py-4 flex justify-end gap-3">
-                    <button className="px-3 py-1 bg-yellow-400 text-white rounded-md text-xs hover:bg-yellow-500 transition" onClick={() => navigate("update-category")}>Update</button>
-                    <button className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition">Delete</button>
-                  </td>
+        <AnimatePresence mode="wait">
+          <motion.table
+            key={currentPage}
+            className="w-full text-sm text-left text-gray-700"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {loading ? (
+              <tbody>
+                <tr>
+                  <td colSpan="5" className="text-center py-4">Loading...</td>
                 </tr>
-              ))}
-            </tbody>
-          </table>)}
-  </motion.table>
-</AnimatePresence>
+              </tbody>
+            ) : (
+              <>
+                <thead className="bg-white/30 border-b border-gray-300 backdrop-blur-md">
+                  <tr>
+                    <th className="px-6 py-3 font-semibold">Title</th>
+                    <th className="px-6 py-3 font-semibold">Description</th>
+                    <th className="px-6 py-3 font-semibold">Created At</th>
+                    <th className="px-6 py-3 font-semibold">Updated At</th>
+                    <th className="px-6 py-3 font-semibold text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white/40 backdrop-blur-sm">
+                  {categories.map((category) => (
+                    <tr
+                      key={category._id}
+                      className="even:bg-white/60 hover:bg-white/80 transition-all"
+                    >
+                      <td className="px-6 py-4">{category.title}</td>
+                      <td className="px-6 py-4">{category.description}</td>
+                      <td className="px-6 py-4">
+                        {moment(category.createdAt).tz("Asia/Kolkata").format("DD/MMM/YYYY, HH:mm:ss")}
+                      </td>
+                      <td className="px-6 py-4">
+                        {moment(category.updatedAt).tz("Asia/Kolkata").format("DD/MMM/YYYY, HH:mm:ss")}
+                      </td>
+                      <td className="px-6 py-4 flex justify-end gap-3">
+                        <button
+                          className="px-3 py-1 bg-yellow-400 text-white rounded-md text-xs hover:bg-yellow-500 transition hover:cursor-pointer"
+                          onClick={() => navigate(`update-category/${category._id}`)}
+                        >
+                          Update
+                        </button>
+                        <button className="px-3 py-1 bg-red-500 text-white rounded-md text-xs hover:bg-red-600 transition hover:cursor-pointer">
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </>
+            )}
+          </motion.table>
+        </AnimatePresence>
+
 
 
 
