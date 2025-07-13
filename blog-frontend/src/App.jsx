@@ -13,6 +13,10 @@ import Login from "./pages/Login"
 import Signup from "./pages/Signup"
 import NewCategory from "./pages/category/NewCategory"
 import UpdateCategory from "./pages/category/UpdateCategory"
+import NewPost from "./pages/post/NewPost"
+import PostDetail from "./pages/post/PostDetail"
+import UpdatePost from "./pages/post/UpdatePost"
+
 
 function App() {
   return (
@@ -23,9 +27,14 @@ function App() {
       <Route element={<PrivateLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="posts" element={<PostList />} />
+        <Route path="posts/new-post" element={<NewPost />} />
+        <Route path="posts/detail-post/:id" element={<PostDetail />} />
+        <Route path="posts/update-post/:id" element={<UpdatePost />} />
+        
         <Route path="categories" element={<CategoryList />} />
         <Route path="categories/new-category" element={<NewCategory />} />
         <Route path="categories/update-category/:id" element={<UpdateCategory />} />
+        
         <Route path="profile" element={<Profile />} />
         <Route path="setting" element={<Setting />} />
       </Route>
