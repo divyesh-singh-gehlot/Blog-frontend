@@ -38,7 +38,7 @@ const UpdatePost = () => {
 
           setFormData({
             title: data.post.title,
-            desc: data.post.desc,
+            description: data.post.description,
             category: data.post.category._id,
             file: data.post?.file?._id,
           });
@@ -103,21 +103,21 @@ const UpdatePost = () => {
         const data = response.data;
 
         toast.success(data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: true,
+          position: "top-right",
+          autoClose: 3000,
         });
         setFormData(initialFormData);
         setFormError(initialFormError);
         setLoading(false);
-        navigate(`/posts/detail-post/${postId}`);
+        navigate(`/posts/post-detail/${postId}`);
       } catch (error) {
         setLoading(false);
         setFormError(initialFormError);
         const response = error.response;
         const data = response.data;
         toast.error(data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: true,
+          position: "top-right",
+          autoClose: 3000,
         });
       }
     }
@@ -140,8 +140,8 @@ const UpdatePost = () => {
         setFileId(data.data._id);
 
         toast.success(data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: true,
+          position: "top-right",
+          autoClose: 3000,
         });
         setIsDisable(false);
       } catch (error) {
@@ -149,8 +149,8 @@ const UpdatePost = () => {
         const response = error.response;
         const data = response.data;
         toast.error(data.message, {
-          position: toast.POSITION.TOP_RIGHT,
-          autoClose: true,
+          position: "top-right",
+          autoClose: 3000,
         });
       }
     } else {
@@ -159,58 +159,75 @@ const UpdatePost = () => {
   };
 
   return (
-    <div>
-      <button className="button button-block" onClick={() => navigate(-1)}>
-        Go Back
-      </button>
-      <div className="form-container">
-        <form className="inner-container" onSubmit={handleSubmit}>
-          <h2 className="form-title">Update Post</h2>
-          <div className="form-group">
-            <label>Title</label>
+    <div className="min-h-screen bg-[#f9f9f9] flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 font-sans">
+      <div className="w-full max-w-3xl bg-white border border-gray-200 rounded-3xl shadow-xl px-6 py-10 sm:p-12 md:p-16 transition-all duration-300">
+        {/* Go Back */}
+        <button
+          onClick={() => navigate(-1)}
+          className="text-sm text-gray-500 hover:text-black mb-6 transition"
+        >
+          ← Go Back
+        </button>
+
+        {/* Title */}
+        <h2 className="text-3xl sm:text-4xl font-serif font-bold text-gray-900 mb-10 text-center leading-tight">
+          ✏️ Update Post
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Title Field */}
+          <div className="flex flex-col">
+            <label className="text-sm mb-2 text-gray-700">Title</label>
             <input
-              className="form-control"
               type="text"
               name="title"
+              className="px-4 py-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="React blog post"
               value={formData.title}
               onChange={handleChange}
             />
-            {formError.title && <p className="error">{formError.title}</p>}
+            {formError.title && (
+              <p className="text-red-500 text-sm mt-1">{formError.title}</p>
+            )}
           </div>
 
-          <div className="form-group">
-            <label>Description</label>
+          {/* Description */}
+          <div className="flex flex-col">
+            <label className="text-sm mb-2 text-gray-700">Description</label>
             <textarea
-              className="form-control"
-              type="text"
-              name="desc"
-              placeholder="Lorem ipsum"
-              value={formData.desc}
+              name="description"
+              rows="5"
+              className="px-4 py-3 rounded-xl border border-gray-300 shadow-inner resize-none focus:outline-none focus:ring-2 focus:ring-black"
+              placeholder="Start writing here..."
+              value={formData.description}
               onChange={handleChange}
             ></textarea>
           </div>
 
-          <div className="form-group">
-            <label>Select an image</label>
+          {/* File Upload */}
+          <div className="flex flex-col">
+            <label className="text-sm mb-2 text-gray-700">Upload Image</label>
             <input
-              className="form-control"
               type="file"
               name="file"
-              placeholder="Lorem ipsum"
               onChange={handleFileChange}
+              className="text-sm file:px-4 file:py-2 file:rounded-full file:border-0 file:bg-black file:text-white hover:file:bg-gray-800"
             />
-            {extensionError && <p className="error">{extensionError}</p>}
+            {extensionError && (
+              <p className="text-red-500 text-sm mt-1">{extensionError}</p>
+            )}
           </div>
 
-          <div className="form-group">
-            <label>Select a category</label>
+          {/* Category */}
+          <div className="flex flex-col">
+            <label className="text-sm mb-2 text-gray-700">Category</label>
             <select
-              className="form-control"
               name="category"
               value={formData.category}
               onChange={handleChange}
+              className="px-4 py-3 rounded-xl border border-gray-300 shadow-inner focus:outline-none focus:ring-2 focus:ring-black"
             >
+              <option value="">Select a category</option>
               {categories.map((category) => (
                 <option key={category._id} value={category._id}>
                   {category.title}
@@ -218,16 +235,17 @@ const UpdatePost = () => {
               ))}
             </select>
             {formError.category && (
-              <p className="error">{formError.category}</p>
+              <p className="text-red-500 text-sm mt-1">{formError.category}</p>
             )}
           </div>
 
-          <div className="form-group">
+          {/* Submit Button */}
+          <div className="pt-4 text-center">
             <input
-              className="button"
               type="submit"
               disabled={isDisable}
-              value={`${loading ? "Updating..." : "Update"}`}
+              value={loading ? "Updating..." : "Update"}
+              className="px-8 py-3 bg-black text-white rounded-full hover:scale-105 hover:shadow-lg transition-transform duration-200 disabled:opacity-50"
             />
           </div>
         </form>

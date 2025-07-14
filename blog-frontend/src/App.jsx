@@ -28,7 +28,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="posts" element={<PostList />} />
         <Route path="posts/new-post" element={<NewPost />} />
-        <Route path="posts/detail-post/:id" element={<PostDetail />} />
+        <Route path="posts/post-detail/:id" element={<PostDetail />} />
         <Route path="posts/update-post/:id" element={<UpdatePost />} />
         
         <Route path="categories" element={<CategoryList />} />

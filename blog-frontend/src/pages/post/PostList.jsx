@@ -11,6 +11,7 @@ const PostList = () => {
   const [posts, setPosts] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fileUrls, setFileUrls] = useState({});
 
   const fetchPosts = async () => {
     try {
@@ -27,6 +28,30 @@ const PostList = () => {
   useEffect(() => {
     fetchPosts();
   }, [searchValue]);
+
+  useEffect(() => {
+    const fetchFileUrlsSequentially = async () => {
+      const urls = {};
+
+      for (const post of posts) {
+        const key = post.file?.key;
+        if (key) {
+          try {
+            const response = await axios.get(`/file/signed-url?key=${key}`);
+            urls[post._id] = response.data.data.url;
+          } catch (error) {
+            console.error(`Error fetching file URL for post ${post._id}:`, error);
+          }
+        }
+      }
+
+      setFileUrls(urls);
+    };
+
+    if (posts.length > 0) {
+      fetchFileUrlsSequentially();
+    }
+  }, [posts]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fdfbfb] to-[#ebedee] px-4 py-6 flex flex-col items-center">
@@ -65,12 +90,13 @@ const PostList = () => {
             posts.map((post) => (
               <motion.div
                 key={post._id}
+                onClick={() => navigate(`post-detail/${post._id}`)}
                 className="relative bg-white shadow-md rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 group h-[420px]"
               >
                 {/* Image (static size by default, full size on hover) */}
                 <div className="relative h-56 overflow-hidden transition-all duration-500 group-hover:absolute group-hover:inset-0 group-hover:h-full group-hover:z-10">
                   <img
-                    src={img}
+                    src={fileUrls[post._id] || "/fallback.jpg"}
                     alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -84,11 +110,11 @@ const PostList = () => {
                   </div>
                   <div className="flex items-center gap-3 mt-4">
                     <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white text-sm font-semibold uppercase">
-                      {post.createdBy?.name?.[0] || "U"}
+                      {post.updatedby?.name?.[0] || "U"}
                     </div>
                     <div>
                       <p className="text-gray-700 text-sm font-medium">
-                        {post.createdBy?.name || "Unknown User"}
+                        {post.updatedby?.name || "Unknown User"}
                       </p>
                       <p className="text-xs text-gray-500">
                         Updated: {moment(post.updatedAt).tz("Asia/Kolkata").format("DD MMM YYYY, hh:mm A")}
