@@ -4,7 +4,6 @@ import axios from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import { motion, AnimatePresence } from "framer-motion";
-import img from "../../../../../../Downloads/Me/test.jpeg"
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -13,11 +12,18 @@ const PostList = () => {
   const [loading, setLoading] = useState(false);
   const [fileUrls, setFileUrls] = useState({});
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageCount, setPageCount] = useState([]);
+
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`/posts?q=${searchValue}`);
-      setPosts(res.data.data.posts || []);
+      const res = await axios.get(`/posts?q=${searchValue}&page=${currentPage}`);
+      const data = res.data.data;
+      setPosts(data.posts || []);
+      setTotalPages(data.totalPages || 1);
       setLoading(false);
     } catch (err) {
       toast.error("Failed to fetch posts");
@@ -27,12 +33,11 @@ const PostList = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [searchValue]);
+  }, [searchValue, currentPage]);
 
   useEffect(() => {
     const fetchFileUrlsSequentially = async () => {
       const urls = {};
-
       for (const post of posts) {
         const key = post.file?.key;
         if (key) {
@@ -44,7 +49,6 @@ const PostList = () => {
           }
         }
       }
-
       setFileUrls(urls);
     };
 
@@ -52,6 +56,18 @@ const PostList = () => {
       fetchFileUrlsSequentially();
     }
   }, [posts]);
+
+  useEffect(() => {
+    const temp = [];
+    for (let i = 1; i <= totalPages; i++) {
+      temp.push(i);
+    }
+    setPageCount(temp);
+  }, [totalPages]);
+
+  const handlePrev = () => setCurrentPage((prev) => prev - 1);
+  const handleNext = () => setCurrentPage((prev) => prev + 1);
+  const handlePage = (page) => setCurrentPage(page);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fdfbfb] to-[#ebedee] px-4 py-6 flex flex-col items-center">
@@ -75,7 +91,7 @@ const PostList = () => {
       {/* Posts */}
       <AnimatePresence>
         <motion.div
-          key={searchValue}
+          key={currentPage + searchValue}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -93,7 +109,6 @@ const PostList = () => {
                 onClick={() => navigate(`post-detail/${post._id}`)}
                 className="relative bg-white shadow-md rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 group h-[420px]"
               >
-                {/* Image (static size by default, full size on hover) */}
                 <div className="relative h-56 overflow-hidden transition-all duration-500 group-hover:absolute group-hover:inset-0 group-hover:h-full group-hover:z-10">
                   <img
                     src={fileUrls[post._id] || "/fallback.jpg"}
@@ -101,8 +116,6 @@ const PostList = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
-
-                {/* Content (only visible when not hovered) */}
                 <div className="p-5 flex flex-col justify-between h-[calc(100%-14rem)] transition-opacity duration-500 ease-in-out group-hover:opacity-0">
                   <div>
                     <h2 className="text-xl font-bold text-gray-800 line-clamp-1">{post.title}</h2>
@@ -127,6 +140,39 @@ const PostList = () => {
           )}
         </motion.div>
       </AnimatePresence>
+
+      {/* Pagination */}
+      {pageCount.length > 1 && (
+        <div className="flex justify-center mt-10 gap-2 flex-wrap">
+          <button
+            className="px-4 py-2 bg-black text-white rounded-lg text-sm disabled:bg-gray-400"
+            onClick={handlePrev}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          {pageCount.map((pageNumber) => (
+            <button
+              key={pageNumber}
+              className={`px-4 py-2 text-sm rounded-lg transition ${
+                currentPage === pageNumber
+                  ? "bg-black text-white"
+                  : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+              }`}
+              onClick={() => handlePage(pageNumber)}
+            >
+              {pageNumber}
+            </button>
+          ))}
+          <button
+            className="px-4 py-2 bg-black text-white rounded-lg text-sm disabled:bg-gray-400"
+            onClick={handleNext}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
