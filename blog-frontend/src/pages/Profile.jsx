@@ -48,18 +48,18 @@ const Profile = () => {
         console.log(userPosts);
 
         const urls = {};
-                for (const post of postsByUser.slice(0, 8)) {
-                  const key = post.file?.key;
-                  if (key) {
-                    try {
-                      const res = await axios.get(`/file/signed-url?key=${key}`);
-                      urls[post._id] = res.data.data.url;
-                    } catch {
-                      console.warn(`Could not load image for ${post._id}`);
-                    }
-                  }
-                }
-                setFileUrls(urls);
+        for (const post of postsByUser.slice(0, 8)) {
+          const key = post.file?.key;
+          if (key) {
+            try {
+              const res = await axios.get(`/file/signed-url?key=${key}`);
+              urls[post._id] = res.data.data.url;
+            } catch {
+              console.warn(`Could not load image for ${post._id}`);
+            }
+          }
+        }
+        setFileUrls(urls);
       } catch (err) {
         console.error("Error fetching profile data:", err);
       }
@@ -82,6 +82,7 @@ const Profile = () => {
         variants={fadeInUp}
       >
         {/* User Info */}
+        {/* User Info */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full">
           <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gray-400 text-white flex items-center justify-center text-lg sm:text-xl font-semibold uppercase">
             {(user?.name || "U").charAt(0)}
@@ -91,6 +92,14 @@ const Profile = () => {
               {user.name}
             </h1>
             <p className="text-gray-500 text-sm sm:text-base">{user.email}</p>
+
+            {/* Verified Badge */}
+            {user.isVerified && (
+              <span className="inline-block mt-1 px-3 py-0.5 bg-green-100 text-green-700 text-xs font-medium rounded-full">
+                ✅ Verified
+              </span>
+            )}
+
             <div className="flex items-center gap-4 text-sm text-gray-600 mt-2 flex-wrap">
               <span className="flex items-center gap-1">
                 <FaCalendarAlt className="text-green-500" />
@@ -103,6 +112,7 @@ const Profile = () => {
             </p>
           </div>
         </div>
+
 
         {/* Action Buttons */}
         <div className="flex gap-2 sm:gap-3 items-center">

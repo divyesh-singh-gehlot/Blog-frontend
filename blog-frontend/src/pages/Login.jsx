@@ -1,21 +1,20 @@
-import { useState } from "react"
-import axios from "../utils/axiosInstance"
-import { toast } from "react-toastify"
-import loginValidator from "../validators/loginValidator"
-import { useNavigate } from "react-router-dom"
+import { useState } from "react";
+import axios from "../utils/axiosInstance";
+import { toast } from "react-toastify";
+import loginValidator from "../validators/loginValidator";
+import { useNavigate } from "react-router-dom";
 
 const initialFormData = {
   email: "",
-  password: ""
-}
+  password: "",
+};
 
 const initialFormError = {
   email: "",
-  password: ""
-}
+  password: "",
+};
 
 const Login = () => {
-
   const [formData, setFormData] = useState(initialFormData);
   const [formError, setFormError] = useState(initialFormError);
   const [loading, setLoading] = useState(false);
@@ -23,8 +22,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +38,6 @@ const Login = () => {
     } else {
       try {
         setLoading(true);
-
         const response = await axios.post("/auth/signin/", formData);
         const data = response.data;
 
@@ -47,15 +45,13 @@ const Login = () => {
 
         toast.success(data.message, {
           position: "top-right",
-          autoClose: 3000
-        })
+          autoClose: 1000,
+        });
 
         setFormData(initialFormData);
         setFormError(initialFormError);
-
         setLoading(false);
-        navigate("/")
-
+        navigate("/");
       } catch (error) {
         setLoading(false);
         const response = error.response;
@@ -63,12 +59,11 @@ const Login = () => {
 
         toast.error(data.message, {
           position: "top-right",
-          autoClose: true
-        })
+          autoClose: true,
+        });
       }
     }
-
-  }
+  };
 
   return (
     <div className="min-h-screen flex flex-col justify-start items-center pt-20 bg-white">
@@ -106,7 +101,20 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
             />
-            {formError.password && <p className="text-red-900">{formError.password}</p>}
+            {formError.password && (
+              <p className="text-red-900">{formError.password}</p>
+            )}
+
+            {/* Forgot Password Button */}
+            <div className="flex justify-end mt-2">
+              <button
+                type="button"
+                onClick={() => navigate("/forgot-password")}
+                className="text-sm text-blue-500 hover:underline transition"
+              >
+                Forgot Password?
+              </button>
+            </div>
           </div>
 
           <div>

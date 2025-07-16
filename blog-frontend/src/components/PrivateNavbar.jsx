@@ -16,7 +16,7 @@ const PrivateNavbar = () => {
     window.localStorage.removeItem("sessionData");
     toast.success("Logout Successful", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 1000,
     });
     navigate("/login");
   };

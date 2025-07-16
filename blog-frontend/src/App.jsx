@@ -17,6 +17,9 @@ import NewPost from "./pages/post/NewPost"
 import PostDetail from "./pages/post/PostDetail"
 import UpdatePost from "./pages/post/UpdatePost"
 import UpdateProfile from "./pages/UpdateProfile"
+import VerifyUser from "./pages/VerifyUser"
+import ForgotPassword from "./pages/ForgotPassword"
+
 
 
 function App() {
@@ -39,12 +42,14 @@ function App() {
         <Route path="profile" element={<Profile />} />
         <Route path="update-profile" element={<UpdateProfile />} />
         <Route path="setting" element={<Setting />} />
+        <Route path="verify-user" element={<VerifyUser />} />
       </Route>
 
       {/* Public Routes */}
       <Route element={<PublicLayout />}>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<Signup />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
       </Route>
     </Routes>
 

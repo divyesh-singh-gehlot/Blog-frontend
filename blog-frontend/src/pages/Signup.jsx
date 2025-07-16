@@ -56,7 +56,7 @@ const Signup = () => {
                 
                 toast.success(data.message , {
                     position: "top-right",
-                    autoClose:3000
+                    autoClose:1000
                 })
 
                 setFormData(initialFormData);
