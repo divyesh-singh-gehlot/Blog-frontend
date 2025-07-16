@@ -16,6 +16,7 @@ import UpdateCategory from "./pages/category/UpdateCategory"
 import NewPost from "./pages/post/NewPost"
 import PostDetail from "./pages/post/PostDetail"
 import UpdatePost from "./pages/post/UpdatePost"
+import UpdateProfile from "./pages/UpdateProfile"
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="categories/update-category/:id" element={<UpdateCategory />} />
         
         <Route path="profile" element={<Profile />} />
+        <Route path="update-profile" element={<UpdateProfile />} />
         <Route path="setting" element={<Setting />} />
       </Route>
 
