@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "../utils/axiosInstance";
 import moment from "moment-timezone";
+import ImageWithFallback from "../components/ImageWithFallback";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -136,10 +137,10 @@ const Home = () => {
                 >
                   {/* Image */}
                   <div className="relative aspect-[4/3] overflow-hidden">
-                    <img
-                      src={fileUrls[post._id] || "/fallback.jpg"}
+                    <ImageWithFallback
+                      src={fileUrls[post._id]}
                       alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full group-hover:scale-105"
                     />
                   </div>
 
