@@ -63,7 +63,7 @@ const UpdateProfile = () => {
         const res = await axios.put("/auth/update-profile", formData);
         toast.success(res.data?.message || "Profile updated successfully!", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
         });
 
         setFormError(initialFormError);
@@ -75,7 +75,7 @@ const UpdateProfile = () => {
           err?.response?.data?.message || "Failed to update profile";
         toast.error(message, {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
         });
       }
     }

@@ -24,8 +24,7 @@ const PrivateFooter = () => {
           <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-3">Resources</h3>
           <ul className="space-y-2 text-sm">
             <li><a href="/terms" className="hover:underline">Terms of Service</a></li>
-            <li><a href="/privacy" className="hover:underline">Privacy Policy</a></li>
-            <li><a href="/contact" className="hover:underline">Contact</a></li>
+            <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
           </ul>
         </div>
 

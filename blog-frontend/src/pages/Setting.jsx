@@ -45,7 +45,7 @@ const Setting = () => {
 
         toast.success(data.message, {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
         });
         setFormData(initialFormData);
         setFormError(initialFormError);
@@ -53,7 +53,7 @@ const Setting = () => {
         const data = error?.response?.data;
         toast.error(data?.message || "Something went wrong", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 1000,
         });
       } finally {
         setLoading(false);

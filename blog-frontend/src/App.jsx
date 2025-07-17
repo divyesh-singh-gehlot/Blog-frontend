@@ -19,6 +19,8 @@ import UpdatePost from "./pages/post/UpdatePost"
 import UpdateProfile from "./pages/UpdateProfile"
 import VerifyUser from "./pages/VerifyUser"
 import ForgotPassword from "./pages/ForgotPassword"
+import Tos from "./pages/Tos"
+import PrivacyPolicy from "./pages/PrivacyPolicy"
 
 
 
@@ -43,6 +45,9 @@ function App() {
         <Route path="update-profile" element={<UpdateProfile />} />
         <Route path="setting" element={<Setting />} />
         <Route path="verify-user" element={<VerifyUser />} />
+
+        <Route path="terms" element={<Tos />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
       </Route>
 
       {/* Public Routes */}
