@@ -4,6 +4,8 @@ import axios from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
 import { motion, AnimatePresence } from "framer-motion";
+import ImageWithFallback from "../../components/ImageWithFallback";
+
 
 const PostList = () => {
   const navigate = useNavigate();
@@ -110,11 +112,11 @@ const PostList = () => {
                 className="relative bg-white shadow-md rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 group h-[420px]"
               >
                 <div className="relative h-56 overflow-hidden transition-all duration-500 group-hover:absolute group-hover:inset-0 group-hover:h-full group-hover:z-10">
-                  <img
-                    src={fileUrls[post._id] || "/fallback.jpg"}
-                    alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  <ImageWithFallback
+                      src={fileUrls[post._id]}
+                      alt={post.title}
+                      className="w-full h-full group-hover:scale-105"
+                    />
                 </div>
                 <div className="p-5 flex flex-col justify-between h-[calc(100%-14rem)] transition-opacity duration-500 ease-in-out group-hover:opacity-0">
                   <div>
