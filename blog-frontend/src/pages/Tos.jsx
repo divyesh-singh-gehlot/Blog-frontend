@@ -7,7 +7,7 @@ const Tos = () => {
       <section className="mb-6">
         <p>
           Welcome to <strong>Notionary</strong>! These Terms of Service ("Terms") govern your use of our website
-          located at <a href="https://notionary.com" className="text-blue-600 underline">https://notionary.com</a> (the
+          located at <a href="https://notionary-5sn8.onrender.com/" className="text-blue-600 underline">Notionary</a> (the
           “Site”), and any content or services we provide (collectively, the “Service”).
         </p>
         <p className="mt-2">

@@ -10,8 +10,8 @@ const PrivacyPolicy = () => {
         <p>
           Welcome to <strong>Notionary</strong>. Your privacy is important to us. This Privacy Policy explains how we
           collect, use, and protect your information when you visit or use our website at{" "}
-          <a href="https://notionary.com" className="text-blue-600 underline">
-            https://notionary.com
+          <a href="https://notionary-5sn8.onrender.com/" className="text-blue-600 underline">
+            Notionary
           </a>.
         </p>
       </section>

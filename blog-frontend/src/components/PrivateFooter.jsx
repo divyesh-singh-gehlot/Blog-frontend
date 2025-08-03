@@ -1,8 +1,11 @@
+import { NavLink, useNavigate } from "react-router-dom";
+
 const PrivateFooter = () => {
+  const navigate = useNavigate();
   return (
     <footer className="bg-white border-t border-gray-200 text-gray-700 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        
+
         {/* Branding */}
         <div>
           <h2 className="text-2xl font-serif font-bold text-gray-900">Notionary</h2>
@@ -12,19 +15,48 @@ const PrivateFooter = () => {
         {/* Quick Links */}
         <div>
           <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-3">Quick Links</h3>
-          <ul className="space-y-2 text-sm">
-            <li><a href="/posts" className="hover:underline">Browse Posts</a></li>
-            <li><a href="/categories" className="hover:underline">Categories</a></li>
-            <li><a href="/profile" className="hover:underline">Profile</a></li>
+          <ul className="space-y-2 text-sm flex flex-col gap-2">
+
+            <NavLink
+              to="/posts"
+              className="hover:underline"
+            >
+              Browse Posts
+            </NavLink>
+
+            <NavLink
+              to="/categories"
+              className="hover:underline"
+            >
+              Categories
+            </NavLink>
+
+            <NavLink
+              to="/profile"
+              className="hover:underline"
+            >
+              Profile
+            </NavLink>
           </ul>
         </div>
 
         {/* Resources */}
         <div>
           <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider mb-3">Resources</h3>
-          <ul className="space-y-2 text-sm">
-            <li><a href="/terms" className="hover:underline">Terms of Service</a></li>
-            <li><a href="/privacy-policy" className="hover:underline">Privacy Policy</a></li>
+          <ul className="space-y-2 text-sm flex flex-col gap-2">
+            <NavLink
+              to="/terms"
+              className="hover:underline"
+            >
+              Terms of Service
+            </NavLink>
+            
+            <NavLink
+              to="/privacy-policy"
+              className="hover:underline"
+            >
+              Privacy Policy
+            </NavLink>
           </ul>
         </div>
 
@@ -48,14 +80,14 @@ const PrivateFooter = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-100 py-4 text-center text-sm text-gray-500">
-  <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-2 sm:gap-4">
-    <div>© {new Date().getFullYear()} Notionary. All rights reserved.</div>
-    <div className="hidden sm:block">|</div>
-    <div>
-      Made by <span className="font-medium text-gray-700">DIVYESH SINGH GEHLOT</span>
-    </div>
-  </div>
-</div>
+        <div className="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-2 sm:gap-4">
+          <div>© {new Date().getFullYear()} Notionary. All rights reserved.</div>
+          <div className="hidden sm:block">|</div>
+          <div>
+            Made by <span className="font-medium text-gray-700">DIVYESH SINGH GEHLOT</span>
+          </div>
+        </div>
+      </div>
 
     </footer>
   );
